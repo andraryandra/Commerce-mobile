@@ -19,14 +19,18 @@ class UserController extends Controller
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'phone' => ['required', 'string', 'max:255'],
+                'username' => ['required', 'string', 'max:255'],
+                // 'phone' => ['nullable', 'string', 'max:255'],
+                'profile_photo_url' => ['nullable', 'string',],
                 'password' => ['required', 'string', new Password],
             ]);
 
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'phone' => $request->phone,
+                'username' => $request->username,
+                // 'phone' => $request->phone,
+                'profile_photo_url' => $request->profile_photo_url,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -95,7 +99,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|email',
                 'username' => 'required',
-                'phone' => 'required',
+                'phone' => 'nullable',
             ]);
         } catch (Exception $error) {
             return ResponseFormatter::error([
@@ -106,6 +110,7 @@ class UserController extends Controller
 
         $user = Auth::user();
         $user->update($data);
+        // $user->update($data);
 
         return ResponseFormatter::success($user, 'Profile updated');
     }
